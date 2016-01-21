@@ -1,0 +1,13 @@
+<resources>
+    <declare-styleable name="font">
+        <attr name="type">
+            <enum name="bold" value="1"/>
+            <enum name="italic" value="2"/>
+        </attr>
+        <attr name="name">
+            <enum name="Arial" value="1"/>
+            <enum name="OpenSans" value="2"/>
+        </attr>
+    </declare-styleable>
+</resources>
+

@@ -3,4 +3,29 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
+
+    <color name="background_color">#000080</color>
+    <color name="common_layout_background">#f2f2f2</color>
+    <color name="red">#FF0000</color>
+    <color name="text_color_grey">#8F8FA4</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="burgundy">#630036</color>
+    <color name="common_grey_text">#747F8A</color>
+    <color name="pc_counter_color">#E2E2E2</color>
+    <color name="pc_place_holder_color">#AFAFAF</color>
+    <color name="text_dark_grey">#333333</color>
+
+    <color name="nav_drawer_yellow">#ffff99</color>
+    <color name="nav_drawer_dark_yellow">#ffb300</color>
+    <color name="nav_drawer_blue">#1E90FF</color>
+    <color name="background_text_pale_yellow">#FFF5AD</color>
+
+    <color name="white_opaque">#FFFFFFFF</color>
+    <color name="pitch_black">#b4201f1f</color>
+
+    <color name ="color_primary">@color/background_color</color>
+
+
 </resources>

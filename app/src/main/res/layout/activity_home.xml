@@ -32,6 +32,8 @@
         android:layout_weight="1">
 
 
+
     </LinearLayout>
+    <include layout="@layout/activity_home_footer"/>
 
 </LinearLayout>

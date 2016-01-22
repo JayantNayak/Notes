@@ -28,4 +28,10 @@
     <color name ="color_primary">@color/background_color</color>
 
 
+    <color name ="circle_green">#02ff3c</color>
+    <color name ="circle_blue">#0252ff</color>
+    <color name ="circle_orange">#ff3c02</color>
+    <color name ="circle_yellow">#ffbc02</color>
+
+
 </resources>

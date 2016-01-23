@@ -32,6 +32,9 @@
     <color name ="circle_blue">#0252ff</color>
     <color name ="circle_orange">#ff3c02</color>
     <color name ="circle_yellow">#ffbc02</color>
+    <color name ="circle_white">@color/white</color>
+
+    <color name="popup_window_grey_bar">@color/pc_counter_color</color>
 
 
 </resources>

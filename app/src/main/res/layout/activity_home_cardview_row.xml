@@ -12,18 +12,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
-        card_view:cardCornerRadius="2dp"
-        card_view:contentPadding="10dp"
+        card_view:cardCornerRadius="4dp"
+        card_view:contentPadding="15dp"
         android:background="@color/cardview_dark_background">
 
         <LinearLayout
+            android:id="@+id/activity_contacts_card_view_linearLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal">
 
 
             <com.example.jayant.notes.customwidgets.TextViewWithFont
-                android:id="@+id/activity_contacts_card_view_row_name"
+                android:id="@+id/activity_home_card_view_row_note_preview"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -31,26 +32,31 @@
                 tools:text="Ashton Samson"/>
 
             <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@mipmap/ic_alarm_black_18dp"/>
-            <ImageView
+                android:id="@+id/activity_home_card_view_row_note_reminderImage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@mipmap/ic_vertical_align_top_black_18dp"/>
+                android:src="@mipmap/ic_alarm_black_18dp"
+                android:layout_marginLeft="5dp"/>
+            <ImageView
+                android:id="@+id/activity_home_card_view_row_note_pinImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/ic_vertical_align_top_black_18dp"
+                android:layout_marginLeft="5dp"/>
 
 
             <com.example.jayant.notes.customwidgets.TextViewWithFont
-                android:id="@+id/activity_contacts_card_view_row_mail"
+                android:id="@+id/activity_home_card_view_row_note_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
                 tools:text="10/19" />
             <ImageView
+                android:id="@+id/activity_home_card_view_row_note_colorDrawable"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
                 android:src="@drawable/green_filled_circle"/>
-
-
 
 
         </LinearLayout>

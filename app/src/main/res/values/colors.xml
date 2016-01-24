@@ -36,5 +36,9 @@
 
     <color name="popup_window_grey_bar">@color/pc_counter_color</color>
 
+    <color name="popup_background">@color/white</color>
+
+    <color name="selected_circle_stroke">@color/pc_counter_color</color>
+
 
 </resources>

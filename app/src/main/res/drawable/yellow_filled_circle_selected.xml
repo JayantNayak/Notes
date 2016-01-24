@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+    <solid
+        android:color="@color/circle_yellow"/>
+    <stroke android:width="@dimen/selected_circle_stroke" android:color="@color/selected_circle_stroke" />
+
+
+    <size
+        android:width="@dimen/selected_circle_radius"
+        android:height="@dimen/selected_circle_radius"/>
+
+</shape>

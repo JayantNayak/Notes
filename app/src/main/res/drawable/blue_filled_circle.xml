@@ -4,6 +4,7 @@
     <solid
         android:color="@color/circle_blue"/>
 
+
     <size
         android:width="@dimen/circle_radius"
         android:height="@dimen/circle_radius"/>

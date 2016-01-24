@@ -4,12 +4,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.jayant.notes.activities.NoteDetailActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:id="@+id/acivity_note_details_parent_view">
     <android.support.v7.widget.Toolbar
         android:id="@+id/activity_note_detail_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
+        android:background="@color/red"
         android:elevation="10dp"
         android:theme="@style/BaseAppTheme.AppBarOverlay">
             <LinearLayout
@@ -31,7 +32,8 @@
     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:background="@color/background_text_pale_yellow">
 
         </ScrollView>
     <include layout="@layout/activity_note_detail_footer"/>

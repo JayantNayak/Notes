@@ -13,7 +13,8 @@
     <dimen name="textsize_vlarge">20dp</dimen>
     <dimen name="textsize_ex_v_large">30dp</dimen>
 
-    <dimen name="circle_radius">15dp</dimen>
+    <dimen name="circle_radius">10dp</dimen>
+    <dimen name="circle_radius_note">17dp</dimen>
     <dimen name="selected_circle_radius">19dp</dimen>
     <dimen name="selected_circle_stroke">4dp</dimen>
 

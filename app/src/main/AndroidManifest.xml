@@ -3,9 +3,8 @@
     package="com.example.jayant.notes">
 
     <!-- To auto-complete the email text field in the login form with the user's emails -->
-    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-    <uses-permission android:name="android.permission.READ_PROFILE" />
-    <uses-permission android:name="android.permission.READ_CONTACTS" />
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <application
         android:name=".NotesApplication"
@@ -22,9 +21,9 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".NoteDetailActivity"
+            android:name=".activities.NoteDetailActivity"
             android:label="@string/title_activity_note_detail" />
-        <activity android:name=".activities.NoteDetailActivity"></activity>
+
         <!-- ATTENTION: This was auto-generated to add Google Play services to your project for
              App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
         <meta-data

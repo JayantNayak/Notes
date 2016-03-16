@@ -40,6 +40,7 @@ import android.widget.Toast;
 import com.example.jayant.notes.R;
 import com.example.jayant.notes.customwidgets.EditTextWithFont;
 import com.example.jayant.notes.model.NoteColor;
+import com.example.jayant.notes.utils.ImgUtils;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -49,6 +50,7 @@ import java.util.ArrayList;
 public class NoteDetailActivity extends AppCompatActivity implements View.OnClickListener {
     static private final String TAG = "NoteDetails-Activity";
     static private final int RESULT_LOAD_IMAGE = 1;
+    static private final int RESULT_CAPTURE_IMAGE = 2;
 
     private Toolbar mToolbar;
     private PopupWindow pwindo;
@@ -63,6 +65,8 @@ public class NoteDetailActivity extends AppCompatActivity implements View.OnClic
     private ImageView mCheckBoxBtn;
     private EditTextWithFont mNoteEditor;
     private NoteColor mNoteCol;
+
+    private int imgSpanWidth = 400,imgSpanHeight = 500,borderPadding = 10;
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -270,7 +274,14 @@ public class NoteDetailActivity extends AppCompatActivity implements View.OnClic
                 intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
                 intent.setAction(Intent.ACTION_GET_CONTENT);
                 startActivityForResult(Intent.createChooser(intent,"Select Picture"), RESULT_LOAD_IMAGE);*/
+                break;
 
+            case R.id.activity_note_detail_footer_camera:
+
+
+                Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(intent, RESULT_CAPTURE_IMAGE);
+                break;
 
 
         }
@@ -280,8 +291,44 @@ public class NoteDetailActivity extends AppCompatActivity implements View.OnClic
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        // get gallery images
 
+        if (requestCode == RESULT_CAPTURE_IMAGE && resultCode == RESULT_OK && null != data) {
+
+            Log.d(TAG, "Captured Image ");
+            Bitmap b = (Bitmap) data.getExtras().get("data");
+
+            b = Bitmap.createScaledBitmap(b, imgSpanWidth-borderPadding, imgSpanHeight-borderPadding, false);
+
+            Bitmap img = ImgUtils.addWhiteBorder(b, borderPadding);
+
+            final Drawable d = new BitmapDrawable(getResources(), img);
+            d.setBounds(0, 0, imgSpanWidth, imgSpanHeight);
+            final ImageSpan imgSpan = new ImageSpan(d);
+
+            SpannableStringBuilder ss = new SpannableStringBuilder(".\n");
+            ss.setSpan(imgSpan, 0, (".\n").length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            ss.setSpan(new NoteDetailsClickAbleSpan(), 0, (".\n").length(), 0);
+
+            int start = Math.max( mNoteEditor.getSelectionStart(), 0);
+            int end = Math.max( mNoteEditor.getSelectionEnd(), 0);
+            Log.d(TAG, "Start " + start + "End " + end);
+            int offsetStart = Math.min(start, end) ;
+            int offsetEnd = Math.max(start, end) ;
+
+            if(offsetStart != 0){
+                String str = "\n";
+                int len = str.length();
+                mNoteEditor.append(str, 0, len);
+                Log.d(TAG, "append  newline");
+                offsetStart = offsetStart + len;
+                offsetEnd = offsetEnd + len;
+
+            }
+
+            mNoteEditor.getText().replace(offsetStart, offsetEnd, ss, 0, ss.length());
+
+        }
+        // get gallery images
         if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
 
             /*Uri selectedImage = data.getData();
@@ -361,16 +408,10 @@ public class NoteDetailActivity extends AppCompatActivity implements View.OnClic
 
 
 
-           /* ImageView imageView = (ImageView) findViewById(R.id.selectImage);
-            imageView.setImageBitmap(BitmapFactory.decodeFile(selectedImagePath));*/
-
-
-
-            //Bitmap b = BitmapFactory.decodeResource(getResources(), R.drawable.ic_document);
-            int width = 400,height = 500,borderpadding = 50;
             boolean once = true;
             int startPos =0;
             boolean prevNewLine = false;
+            //Fixing allignment issues when adding a new image inside the edit text
             int alignCase =0;
 
             int start1 = Math.max( mNoteEditor.getSelectionStart(), 0);
@@ -386,16 +427,13 @@ public class NoteDetailActivity extends AppCompatActivity implements View.OnClic
                 alignCase = 2;
             }
             for(int i = 0; i < mArrayImagePath.size(); i++){
-                // get bitmap with white border
-               // Bitmap b = addWhiteBorder( BitmapFactory.decodeFile(mArrayImagePath.get(i)) , 50);
-                //Bitmap b = BitmapFactory.decodeFile(mArrayImagePath.get(i));
 
 
-                Bitmap b = decodeSampledBitmapFromResource(mArrayImagePath.get(i), width-borderpadding, height-borderpadding);
-                Bitmap img = addWhiteBorder(b, borderpadding);
+                Bitmap b = ImgUtils.decodeSampledBitmapFromResource(mArrayImagePath.get(i), imgSpanWidth - borderPadding, imgSpanHeight - borderPadding);
+                Bitmap img = ImgUtils.addWhiteBorder(b, borderPadding);
 
                 final Drawable d = new BitmapDrawable(getResources(), img);
-                d.setBounds(0, 0, width, height);
+                d.setBounds(0, 0, imgSpanWidth, imgSpanHeight);
                 final ImageSpan imgSpan = new ImageSpan(d);
 
 
@@ -443,35 +481,13 @@ public class NoteDetailActivity extends AppCompatActivity implements View.OnClic
                     }
 
 
-                    //mNoteEditor.getText().replace(start, start, ss, 0, ss.length());
-                    //mNoteEditor.getText().insert( mNoteEditor.getSelectionStart(), ss);
-
-
-                   /* if (start != end) {
-                        mNoteEditor.getText().replace(Math.min(start, end), Math.max(start, end),
-                                "", 0, "".length());
-
-                    } else {
-                        mNoteEditor.getText().replace(Math.min(start, end), Math.max(start, end),
-                                ss, 0, ss.length());
-                    }*/
-               /* }
-                catch (Exception e){
-                    Log.d(TAG, " ERRORR --->  Start " + start + "End " + end);
-                   // e.getStackTrace();
-
-                }*/
 
                 }
                 else if(alignCase ==2){
                     Log.d(TAG, "alignCASE 2" );
 
 
-
                     mNoteEditor.getText().replace(offsetStart, offsetEnd, ss, 0, ss.length());
-
-
-
 
                 }
 
@@ -497,67 +513,25 @@ public class NoteDetailActivity extends AppCompatActivity implements View.OnClic
 
     public class NoteDetailsClickAbleSpan extends ClickableSpan {
 
-        String filePath;
+        String filePath = null;
 
         public NoteDetailsClickAbleSpan(String filePath) {
             this.filePath = filePath;
         }
+        public NoteDetailsClickAbleSpan() {
 
+        }
         @Override
         public void onClick(View widget) {
-            Toast.makeText(NoteDetailActivity.this, filePath, Toast.LENGTH_LONG).show();
-
-        }
-    }
-
-    private Bitmap addWhiteBorder(Bitmap bmp, int borderSize) {
-        Bitmap bmpWithBorder = Bitmap.createBitmap(bmp.getWidth() + borderSize * 2, bmp.getHeight() + borderSize * 2, bmp.getConfig());
-        Canvas canvas = new Canvas(bmpWithBorder);
-        canvas.drawColor(Color.WHITE);
-        canvas.drawBitmap(bmp, borderSize, borderSize, null);
-        return bmpWithBorder;
-    }
-
-    public static int calculateInSampleSize(
-            BitmapFactory.Options options, int reqWidth, int reqHeight) {
-        // Raw height and width of image
-        final int height = options.outHeight;
-        final int width = options.outWidth;
-        int inSampleSize = 1;
-
-        if (height > reqHeight || width > reqWidth) {
-
-            final int halfHeight = height / 2;
-            final int halfWidth = width / 2;
-
-            // Calculate the largest inSampleSize value that is a power of 2 and keeps both
-            // height and width larger than the requested height and width.
-            while ((halfHeight / inSampleSize) > reqHeight
-                    && (halfWidth / inSampleSize) > reqWidth) {
-                inSampleSize *= 2;
+            if(filePath != null) {
+                Toast.makeText(NoteDetailActivity.this, filePath, Toast.LENGTH_LONG).show();
             }
+            else{
+                Toast.makeText(NoteDetailActivity.this, "Camera Image", Toast.LENGTH_LONG).show();
+
+            }
+
         }
-
-        return inSampleSize;
-    }
-
-    public static Bitmap decodeSampledBitmapFromResource(String imgPath, int reqWidth, int reqHeight) {
-
-        //http://stackoverflow.com/questions/20441644/java-lang-outofmemoryerror-bitmapfactory-decodestrpath
-        //http://developer.android.com/training/displaying-bitmaps/load-bitmap.html
-        // First decode with inJustDecodeBounds=true to check dimensions
-        final BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
-
-        BitmapFactory.decodeFile(imgPath, options);
-
-        // Calculate inSampleSize
-        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
-
-        // Decode bitmap with inSampleSize set
-        options.inJustDecodeBounds = false;
-
-        return BitmapFactory.decodeFile(imgPath,options);
     }
 
 

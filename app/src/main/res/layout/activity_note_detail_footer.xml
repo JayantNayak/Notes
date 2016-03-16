@@ -31,9 +31,10 @@
         android:layout_height="wrap_content"
         android:layout_weight="1">
         <ImageView
+            android:id="@+id/activity_note_detail_footer_camera"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@mipmap/ic_add_a_photo_black_24dp"/>
+            android:src="@drawable/camera_selector"/>
     </LinearLayout>
 
 
@@ -42,9 +43,10 @@
         android:layout_height="wrap_content"
         android:layout_weight="1">
         <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@mipmap/ic_crop_original_black_24dp"/>
+            android:id="@+id/activity_note_detail_footer_gallery"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/gallery_selector"/>
     </LinearLayout>
 
     <LinearLayout
@@ -52,9 +54,10 @@
         android:layout_height="wrap_content"
        >
         <ImageView
+            android:id="@+id/activity_note_detail_footer_checkBox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@mipmap/ic_check_box_black_24dp"/>
+            android:src="@drawable/check_box_selector"/>
     </LinearLayout>
 
 

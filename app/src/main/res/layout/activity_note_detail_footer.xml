@@ -11,19 +11,22 @@
         android:layout_height="wrap_content"
         android:layout_weight="1">
         <ImageView
+            android:id="@+id/activity_note_detail_footer_undo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@mipmap/ic_undo_black_24dp"/>
+            android:src="@drawable/undo_selector"/>
     </LinearLayout>
+
 
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1">
         <ImageView
+            android:id="@+id/activity_note_detail_footer_redo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@mipmap/ic_redo_black_24dp"/>
+            android:src="@drawable/redo_selector"/>
     </LinearLayout>
 
     <LinearLayout
@@ -59,6 +62,8 @@
             android:layout_height="wrap_content"
             android:src="@drawable/check_box_selector"/>
     </LinearLayout>
+
+
 
 
 

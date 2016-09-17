@@ -1,0 +1,3 @@
+http://www.appsrox.com/android/tutorials/smartpad/3/
+
+http://stackoverflow.com/questions/9357668/how-to-store-image-in-sqlite-database

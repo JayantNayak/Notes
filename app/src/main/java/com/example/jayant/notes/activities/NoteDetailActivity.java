@@ -39,6 +39,7 @@ import android.widget.Toast;
 
 import com.example.jayant.notes.R;
 import com.example.jayant.notes.customwidgets.EditTextWithFont;
+import com.example.jayant.notes.customwidgets.EditTextWithFontUndoRedo;
 import com.example.jayant.notes.model.NoteColor;
 import com.example.jayant.notes.utils.ImgUtils;
 import com.google.android.gms.appindexing.Action;
@@ -60,10 +61,13 @@ public class NoteDetailActivity extends AppCompatActivity implements View.OnClic
     private ImageView mCircleBlue;
     private ImageView mCircleGreen;
     private ImageView mCircleOrange;
+    private ImageView mUndoBtn;
+    private ImageView mRedoBtn;
     private ImageView mCameraBtn;
     private ImageView mGalleryBtn;
     private ImageView mCheckBoxBtn;
     private EditTextWithFont mNoteEditor;
+    private EditTextWithFontUndoRedo mNoteUndoRedoEditor;
     private NoteColor mNoteCol;
 
     private int imgSpanWidth = 400,imgSpanHeight = 500,borderPadding = 10;
@@ -112,6 +116,13 @@ public class NoteDetailActivity extends AppCompatActivity implements View.OnClic
                         return true;
                     }
                 });
+
+        mUndoBtn = (ImageView) findViewById(R.id.activity_note_detail_footer_undo);
+        mUndoBtn.setOnClickListener(this);
+
+        mRedoBtn = (ImageView) findViewById(R.id.activity_note_detail_footer_redo);
+        mRedoBtn.setOnClickListener(this);
+
         mCameraBtn = (ImageView) findViewById(R.id.activity_note_detail_footer_camera);
         mCameraBtn.setOnClickListener(this);
 
@@ -122,6 +133,8 @@ public class NoteDetailActivity extends AppCompatActivity implements View.OnClic
         mCheckBoxBtn.setOnClickListener(this);
 
         mNoteEditor = (EditTextWithFont)findViewById(R.id.acivity_note_details_editor);
+        //EditTextWithFont noteEdit = (EditTextWithFont)findViewById(R.id.acivity_note_details_editor);
+        mNoteUndoRedoEditor = new EditTextWithFontUndoRedo( mNoteEditor);
         mNoteEditor.setMovementMethod(LinkMovementMethod.getInstance());
 
 
@@ -281,6 +294,15 @@ public class NoteDetailActivity extends AppCompatActivity implements View.OnClic
 
                 Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
                 startActivityForResult(intent, RESULT_CAPTURE_IMAGE);
+                break;
+
+            case R.id.activity_note_detail_footer_undo:
+                Log.d(TAG, "  UNDO  ");
+               mNoteUndoRedoEditor.undo();
+                break;
+            case R.id.activity_note_detail_footer_redo:
+                Log.d(TAG, "  REDO  ");
+                mNoteUndoRedoEditor.redo();
                 break;
 
 

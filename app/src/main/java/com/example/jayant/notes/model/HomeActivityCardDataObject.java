@@ -1,6 +1,7 @@
 package com.example.jayant.notes.model;
 
 import java.util.Date;
+import java.util.StringTokenizer;
 
 /**
  * Created by 20708 on 1/11/2016.
@@ -13,13 +14,15 @@ public class HomeActivityCardDataObject {
     private boolean mReminder;
 
     private NoteColor mNoteColor;
+    private String mNoteId;
 
-    public HomeActivityCardDataObject(String mPreviewText, String mDateText,boolean mReminder, boolean mPinned,NoteColor mNoteColor ){
+    public HomeActivityCardDataObject(String mPreviewText, String mDateText,boolean mReminder, boolean mPinned,NoteColor mNoteColor, String mNoteId ){
         this.mPreviewText = mPreviewText;
         this.mDateText = mDateText;
         this.mPinned = mPinned;
         this.mReminder = mReminder;
         this.mNoteColor = mNoteColor;
+        this.mNoteId = mNoteId;
     }
     public HomeActivityCardDataObject(String mPreviewText, String mDateText, boolean mReminder,boolean mPinned,NoteColor mNoteColor, Date mDate){
         this.mPreviewText = mPreviewText;
@@ -63,5 +66,7 @@ public class HomeActivityCardDataObject {
     }
 
 
+    public String getmNoteId() {return mNoteId;}
+    public void setmNoteId(String mDateText) {this.mNoteId = mNoteId;}
 
 }

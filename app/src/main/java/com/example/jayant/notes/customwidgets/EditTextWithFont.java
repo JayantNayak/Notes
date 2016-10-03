@@ -17,14 +17,10 @@ import android.widget.EditText;
 
 import com.example.jayant.notes.R;
 import com.example.jayant.notes.activities.NoteDetailActivity;
+import com.example.jayant.notes.interfaces.Changeable;
+import com.example.jayant.notes.utils.ChangeManager;
 import com.example.jayant.notes.utils.NotesUtils;
 
-/**
- * <b>@author 55420.</b><br>
- * <b>com.m.qr.customwidgets</b><br>
- * 02/03/2015<br>
- * jibythomas@qatarairways.com.qa
- */
 public class EditTextWithFont extends EditText{
     static private final String TAG = "EditTextWithFont";
     private int defaultDimension = 0;
@@ -40,6 +36,7 @@ public class EditTextWithFont extends EditText{
     private int fontType;
 
     private int fontName;
+
 
     public EditTextWithFont(Context context) {
         super(context);
@@ -63,7 +60,6 @@ public class EditTextWithFont extends EditText{
 
         fontName = a.getInt(R.styleable.font_name, defaultDimension);
         fontType = a.getInt(R.styleable.font_type, defaultDimension);
-
         a.recycle();
 
         if (fontName == FONT_ARIAL) {
@@ -166,4 +162,6 @@ public class EditTextWithFont extends EditText{
         }
 
     }
+
+
 }

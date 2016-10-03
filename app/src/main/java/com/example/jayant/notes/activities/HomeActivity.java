@@ -1,5 +1,6 @@
 package com.example.jayant.notes.activities;
 
+import android.database.Cursor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,10 +10,14 @@ import android.util.Log;
 
 import com.example.jayant.notes.R;
 import com.example.jayant.notes.adapters.HomeActivityRecyclerViewAdapter;
+import com.example.jayant.notes.model.DBHelper;
 import com.example.jayant.notes.model.HomeActivityCardDataObject;
 import com.example.jayant.notes.model.NoteColor;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class HomeActivity extends AppCompatActivity {
     static private final String TAG ="Home-Activity";
@@ -20,12 +25,18 @@ public class HomeActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private HomeActivityRecyclerViewAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
+    private DBHelper noteDb;
+    private ArrayList allNotes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        noteDb = new DBHelper(this);
+       // allNotes = noteDb.getAllNotes();
+        prepareSampleDataBaseSet();
         initActivityViews();
+
 
     }
     private void  initActivityViews(){
@@ -41,12 +52,84 @@ public class HomeActivity extends AppCompatActivity {
 
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setHasFixedSize(true);
-        mAdapter =  new HomeActivityRecyclerViewAdapter(getDataSet());
+        //mAdapter =  new HomeActivityRecyclerViewAdapter(getDataSet());
+        mAdapter =  new HomeActivityRecyclerViewAdapter(getAllDataBaseNotes());
         mRecyclerView.setAdapter(mAdapter);
 
     }
+    private ArrayList<HomeActivityCardDataObject> getAllDataBaseNotes (){
+        ArrayList<HomeActivityCardDataObject> results = new ArrayList<HomeActivityCardDataObject>();
+        Map<String, ArrayList<String>> resultMap = noteDb.getAllNotes();
+
+        String dateText[] = convertStringArrayListToStringArray(resultMap.get("dateTexList"));
+        NoteColor cardCol[] = convertStringArrayListToNoteColorArray(resultMap.get("colorList"));
+        boolean reminderBool[] = convertStringArrayListToBooleanArray(resultMap.get("reminderList"));
+        boolean pinnedBool[] = convertStringArrayListToBooleanArray(resultMap.get("pinList"));
+        String noteId[] = convertStringArrayListToStringArray(resultMap.get("idList"));
+
+        for (int index = 0; index < dateText.length; index++) {
+            Log.d(TAG, " adding data  " + index +" color " + cardCol[index]);
+            HomeActivityCardDataObject obj = new HomeActivityCardDataObject(
+                    index+dateText[index] +"..." ,
+                    dateText[index],
+                    reminderBool[index],
+                    pinnedBool[index],
+                    cardCol[index],noteId[index]);
+            results.add(index, obj);
+
+        }
+
+
+        return results;
+
+    }
+    private String[] convertStringArrayListToStringArray(ArrayList<String> arrList){
+        String resultList[] = new  String[arrList.size()]; ;
+        for(int i=0;i<arrList.size(); i++ ){
+            resultList[i] = arrList.get(i);
+        }
+        return resultList;
+    }
+    private boolean[] convertStringArrayListToBooleanArray(ArrayList<String> arrList){
+        boolean resultList[] = new  boolean[arrList.size()]; ;
+        for(int i=0;i<arrList.size(); i++ ){
+            resultList[i] = Boolean.getBoolean(arrList.get(i));
+        }
+        return resultList;
+    }
+    private NoteColor[] convertStringArrayListToNoteColorArray(ArrayList<String> arrList){
+
+        NoteColor resultList[] = new  NoteColor[arrList.size()];
+        //NoteColor resultList[] = new  NoteColor[1]; ;
+        for(int i=0;i<arrList.size(); i++ ){
+           // Log.d(TAG," color type " + typeOf(arrList.get(i)));
+            if( arrList.get(i).equals("ORANGE")){
+                resultList[i] = NoteColor.ORANGE;
+            }
+            else if(arrList.get(i).equals("GREEN")){
+                resultList[i] = NoteColor.GREEN;
+            }
+            else if(arrList.get(i).equals("YELLOW")){
+                resultList[i] = NoteColor.YELLOW;
+            }
+            else if(arrList.get(i).equals("BLUE")){
+                resultList[i] = NoteColor.BLUE;
+            }
+            else if(arrList.get(i).equals("WHITE")){
+                resultList[i] = NoteColor.WHITE;
+            }
+
+
+        }
+
+        return resultList;
+    }
+
+
 
     private ArrayList<HomeActivityCardDataObject> getDataSet() {
+
+
         ArrayList results = new ArrayList<HomeActivityCardDataObject>();
 
         ArrayList<String[]> cardText = getCardText("hi");
@@ -61,7 +144,7 @@ public class HomeActivity extends AppCompatActivity {
         ArrayList<NoteColor[]> cardColor = getCardColor("hi");
         NoteColor cardCol[] = cardColor.get(0);
 
-
+    /*
 
         for (int index = 0; index < previewText.length; index++) {
             HomeActivityCardDataObject obj = new HomeActivityCardDataObject(
@@ -71,10 +154,41 @@ public class HomeActivity extends AppCompatActivity {
                                                 pinnedBool[index],
                                                 cardCol[index]);
             results.add(index, obj);
+
             Log.d(TAG, " adding data  " + index);
         }
+        */
 
         return results;
+    }
+    private void prepareSampleDataBaseSet() {
+        noteDb.dropTable();
+        noteDb.createTbale();
+
+        ArrayList results = new ArrayList<HomeActivityCardDataObject>();
+
+        ArrayList<String[]> cardText = getCardText("hi");
+        String previewText[] = cardText.get(0);
+        String dateText[] = cardText.get(1);
+
+
+        ArrayList<boolean[]> cardBools = getCardBool("hi");
+        boolean reminderBool[] = cardBools.get(0);
+        boolean pinnedBool[] = cardBools.get(1);
+
+        ArrayList<NoteColor[]> cardColor = getCardColor("hi");
+        NoteColor cardCol[] = cardColor.get(0);
+
+        String sample = "Helllooo every one";
+        byte value[] = sample.getBytes();
+
+        for (int index = 0; index < dateText.length; index++) {
+            noteDb.insertNote(value,dateText[index], cardCol[index].toString(),String.valueOf(reminderBool[index]), String.valueOf(pinnedBool[index]));
+            Log.d(TAG, " inserting data  " + index);
+        }
+
+
+
     }
 
 

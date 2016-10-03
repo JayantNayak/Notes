@@ -4,7 +4,7 @@ package com.example.jayant.notes.customwidgets;
  * THIS CLASS IS PROVIDED TO THE PUBLIC DOMAIN FOR FREE WITHOUT ANY
  * RESTRICTIONS OR ANY WARRANTY.
  */
-
+//http://www.algosome.com/articles/implementing-undo-redo-java.html
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.text.Editable;

@@ -45,7 +45,8 @@
                 android:layout_height="wrap_content"
                 android:isScrollContainer="true"
                 android:scrollHorizontally="false"
-                android:scrollbars="vertical"/>
+                android:scrollbars="vertical"
+                android:background="@android:color/transparent"/>
 
 
             <TextView

@@ -2,6 +2,7 @@ package com.example.jayant.notes.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,7 +27,7 @@ import java.util.ArrayList;
 public class HomeActivityRecyclerViewAdapter extends RecyclerView
         .Adapter<HomeActivityRecyclerViewAdapter.HomeCardDataObjectHolder> {
     static private final String TAG = "ContactsRecyclerAdapter";
-    private ArrayList<HomeActivityCardDataObject> mHomeCardsData;
+    private static ArrayList<HomeActivityCardDataObject> mHomeCardsData;
     // private static OutletsRecyclerViewAdapter.MyClickListener myClickListener;
 
     public static class HomeCardDataObjectHolder extends RecyclerView.ViewHolder
@@ -53,14 +54,34 @@ public class HomeActivityRecyclerViewAdapter extends RecyclerView
 
         @Override
         public void onClick(View v) {
+            int index =  getAdapterPosition();
+            HomeActivityCardDataObject selectedNoteCard = mHomeCardsData.get(index) ;
+
             Context mContext = v.getContext();
             Log.d(TAG, "Contacts recycleradapter pos is : " + getAdapterPosition());
-            // Toast.makeText(v.getContext()," Home recycleradapter pos is : "+getAdapterPosition() , Toast.LENGTH_SHORT).show();
+            //Toast.makeText(v.getContext()," Home recycleradapter pos is : "+getAdapterPosition() , Toast.LENGTH_SHORT).show();
 
 
                     Log.d(TAG, "perform task clicked : " + getAdapterPosition());
+                    Log.d(TAG, "Id of card: " + selectedNoteCard.getmNoteId());
+
                     Toast.makeText(mContext, " perform task clicked : " + getAdapterPosition(), Toast.LENGTH_SHORT).show();
                     Intent activityIntent = new Intent(mContext, NoteDetailActivity.class);
+                    Bundle intentBundle = new Bundle();
+                    intentBundle.putString("mNoteColor", selectedNoteCard.getmNoteColor().toString());
+                    intentBundle.putString("mDateText", selectedNoteCard.getmDateText());
+                    intentBundle.putString("mNoteId", selectedNoteCard.getmNoteId());
+                    intentBundle.putBoolean("mReminder", selectedNoteCard.getmReminder());
+                    intentBundle.putBoolean("mPinned", selectedNoteCard.getmPinned());
+                        activityIntent.putExtras(intentBundle);
+                /*
+                    activityIntent.putExtra("mNoteColor", selectedNoteCard.getmNoteColor());
+                    activityIntent.putExtra("mDateText", selectedNoteCard.getmDateText());
+                    activityIntent.putExtra("mNoteId", selectedNoteCard.getmNoteId());
+                    activityIntent.putExtra("mReminder", selectedNoteCard.getmReminder());
+                    activityIntent.putExtra("mPinned", selectedNoteCard.getmPinned());
+                    */
+
                     mContext.startActivity(activityIntent);
 
 

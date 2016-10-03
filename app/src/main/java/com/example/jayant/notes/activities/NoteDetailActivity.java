@@ -40,7 +40,9 @@ import android.widget.Toast;
 import com.example.jayant.notes.R;
 import com.example.jayant.notes.customwidgets.EditTextWithFont;
 import com.example.jayant.notes.customwidgets.EditTextWithFontUndoRedo;
+import com.example.jayant.notes.interfaces.Changeable;
 import com.example.jayant.notes.model.NoteColor;
+import com.example.jayant.notes.utils.ChangeManager;
 import com.example.jayant.notes.utils.ImgUtils;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
@@ -70,12 +72,13 @@ public class NoteDetailActivity extends AppCompatActivity implements View.OnClic
     private EditTextWithFontUndoRedo mNoteUndoRedoEditor;
     private NoteColor mNoteCol;
 
-    private int imgSpanWidth = 400,imgSpanHeight = 500,borderPadding = 10;
+
+    private int imgSpanWidth = 400, imgSpanHeight = 500, borderPadding = 10;
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
      */
-    private GoogleApiClient client   ;
+    private GoogleApiClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +92,9 @@ public class NoteDetailActivity extends AppCompatActivity implements View.OnClic
 
 
     private void initActivityView() {
+
+
+
         mToolbar = (Toolbar) findViewById(R.id.activity_note_detail_toolbar);
         mToolbar.inflateMenu(R.menu.menu_activity_note_detail_toolbar);
        /* if(mToolbar != null) {
@@ -98,24 +104,24 @@ public class NoteDetailActivity extends AppCompatActivity implements View.OnClic
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }*/
         // default white color of note
-        mToolbar.setBackgroundColor(ContextCompat.getColor(this, R.color.circle_white) );
-        mNoteCol = NoteColor.WHITE;
+        mToolbar.setBackgroundColor(ContextCompat.getColor(this, R.color.circle_white));
+       // mNoteCol = NoteColor.WHITE;
 
-                mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+        mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
 
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
 
-                        switch (item.getItemId()) {
-                            case R.id.activity_note_detail_MoreSubMenu:
-                                //Toast.makeText(getApplicationContext(), "clicked on submenu_item1_addInfo", Toast.LENGTH_LONG).show();
-                                initPopupWindow();
-                                return true;
-                            //case R.id.submenu_item2_contacts:
-                        }
+                switch (item.getItemId()) {
+                    case R.id.activity_note_detail_MoreSubMenu:
+                        //Toast.makeText(getApplicationContext(), "clicked on submenu_item1_addInfo", Toast.LENGTH_LONG).show();
+                        initPopupWindow();
                         return true;
-                    }
-                });
+                    //case R.id.submenu_item2_contacts:
+                }
+                return true;
+            }
+        });
 
         mUndoBtn = (ImageView) findViewById(R.id.activity_note_detail_footer_undo);
         mUndoBtn.setOnClickListener(this);
@@ -129,13 +135,46 @@ public class NoteDetailActivity extends AppCompatActivity implements View.OnClic
         mGalleryBtn = (ImageView) findViewById(R.id.activity_note_detail_footer_gallery);
         mGalleryBtn.setOnClickListener(this);
 
-        mCheckBoxBtn = (ImageView) findViewById(R.id. activity_note_detail_footer_checkBox);
+        mCheckBoxBtn = (ImageView) findViewById(R.id.activity_note_detail_footer_checkBox);
         mCheckBoxBtn.setOnClickListener(this);
 
-        mNoteEditor = (EditTextWithFont)findViewById(R.id.acivity_note_details_editor);
+        mNoteEditor = (EditTextWithFont) findViewById(R.id.acivity_note_details_editor);
         //EditTextWithFont noteEdit = (EditTextWithFont)findViewById(R.id.acivity_note_details_editor);
-        mNoteUndoRedoEditor = new EditTextWithFontUndoRedo( mNoteEditor);
+        mNoteUndoRedoEditor = new EditTextWithFontUndoRedo(mNoteEditor);
         mNoteEditor.setMovementMethod(LinkMovementMethod.getInstance());
+
+        Bundle extras = getIntent().getExtras();
+        if(extras != null){
+            mNoteCol = convertToNoteColor(extras.getString("mNoteColor"));
+
+            switch (mNoteCol) {
+                case WHITE:
+                    setNoteToolBarColor(R.color.circle_white);
+
+                    break;
+
+                case YELLOW:
+                    setNoteToolBarColor(R.color.circle_yellow);
+
+                    break;
+
+                case BLUE:
+                    setNoteToolBarColor(R.color.circle_blue);
+
+                    break;
+
+                case GREEN:
+                    setNoteToolBarColor(R.color.circle_green);
+
+                    break;
+
+                case ORANGE:
+                    setNoteToolBarColor(R.color.circle_orange);
+
+                    break;
+
+            }
+        }
 
 
     }
@@ -161,7 +200,6 @@ public class NoteDetailActivity extends AppCompatActivity implements View.OnClic
             btnClosePopup.getDrawable().setColorFilter(ContextCompat.getColor(this, R.color.popup_window_grey_bar), PorterDuff.Mode.MULTIPLY);
             //btnClosePopup.setOnTouchListener(this);
             btnClosePopup.setOnClickListener(this);
-
 
 
             mCircleWhite = (ImageView) layout.findViewById(R.id.select_col_white);
@@ -209,9 +247,7 @@ public class NoteDetailActivity extends AppCompatActivity implements View.OnClic
                     break;
 
 
-
             }
-
 
 
         } catch (Exception e) {
@@ -221,8 +257,33 @@ public class NoteDetailActivity extends AppCompatActivity implements View.OnClic
 
         //Read more: http://www.androidhub4you.com/2012/07/how-to-create-popup-window-in-android.html#ixzz3y9oMOuOl
     }
+    private NoteColor convertToNoteColor(String color){
+        NoteColor result = null;
 
-    private void setAllDefaultCircles(){
+            if( color.equals("ORANGE")){
+                result = NoteColor.ORANGE;
+            }
+            else if(color.equals("GREEN")){
+                result = NoteColor.GREEN;
+            }
+            else if(color.equals("YELLOW")){
+                result = NoteColor.YELLOW;
+            }
+            else if(color.equals("BLUE")){
+                result = NoteColor.BLUE;
+            }
+            else if(color.equals("WHITE")){
+                result = NoteColor.GREEN;
+            }
+        Log.d(TAG, "color card: " + result);
+
+        return result;
+    }
+
+
+
+
+    private void setAllDefaultCircles() {
         // set all circles to default unelected color state
         mCircleWhite.setImageResource(R.drawable.white_circle_selector);
 
@@ -237,11 +298,16 @@ public class NoteDetailActivity extends AppCompatActivity implements View.OnClic
 
     }
 
-    private void setNoteColor(int color,NoteColor colr) {
+    private void setNoteColor(int color, NoteColor colr) {
         //Toast.makeText(this, " color clicked : ", Toast.LENGTH_SHORT).show();
         pwindo.dismiss();
         mToolbar.setBackgroundColor(ContextCompat.getColor(this, color));
         mNoteCol = colr;
+    }
+    private void setNoteToolBarColor(int color) {
+
+        mToolbar.setBackgroundColor(ContextCompat.getColor(this, color));
+
     }
 
     @Override
@@ -267,11 +333,11 @@ public class NoteDetailActivity extends AppCompatActivity implements View.OnClic
                 break;
 
             case R.id.select_col_green:
-                setNoteColor(R.color.circle_green , NoteColor.GREEN);
+                setNoteColor(R.color.circle_green, NoteColor.GREEN);
                 break;
 
             case R.id.select_col_orange:
-                setNoteColor(R.color.circle_orange , NoteColor.ORANGE);
+                setNoteColor(R.color.circle_orange, NoteColor.ORANGE);
                 break;
             case R.id.activity_note_detail_footer_gallery:
 
@@ -279,7 +345,7 @@ public class NoteDetailActivity extends AppCompatActivity implements View.OnClic
                 Intent i = new Intent(
                         Intent.ACTION_PICK,
                         android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                        i.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+                i.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
                 startActivityForResult(i, RESULT_LOAD_IMAGE);
 
               /*  Intent intent = new Intent();
@@ -298,7 +364,7 @@ public class NoteDetailActivity extends AppCompatActivity implements View.OnClic
 
             case R.id.activity_note_detail_footer_undo:
                 Log.d(TAG, "  UNDO  ");
-               mNoteUndoRedoEditor.undo();
+                mNoteUndoRedoEditor.undo();
                 break;
             case R.id.activity_note_detail_footer_redo:
                 Log.d(TAG, "  REDO  ");
@@ -319,7 +385,7 @@ public class NoteDetailActivity extends AppCompatActivity implements View.OnClic
             Log.d(TAG, "Captured Image ");
             Bitmap b = (Bitmap) data.getExtras().get("data");
 
-            b = Bitmap.createScaledBitmap(b, imgSpanWidth-borderPadding, imgSpanHeight-borderPadding, false);
+            b = Bitmap.createScaledBitmap(b, imgSpanWidth - borderPadding, imgSpanHeight - borderPadding, false);
 
             Bitmap img = ImgUtils.addWhiteBorder(b, borderPadding);
 
@@ -331,13 +397,13 @@ public class NoteDetailActivity extends AppCompatActivity implements View.OnClic
             ss.setSpan(imgSpan, 0, (".\n").length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             ss.setSpan(new NoteDetailsClickAbleSpan(), 0, (".\n").length(), 0);
 
-            int start = Math.max( mNoteEditor.getSelectionStart(), 0);
-            int end = Math.max( mNoteEditor.getSelectionEnd(), 0);
+            int start = Math.max(mNoteEditor.getSelectionStart(), 0);
+            int end = Math.max(mNoteEditor.getSelectionEnd(), 0);
             Log.d(TAG, "Start " + start + "End " + end);
-            int offsetStart = Math.min(start, end) ;
-            int offsetEnd = Math.max(start, end) ;
+            int offsetStart = Math.min(start, end);
+            int offsetEnd = Math.max(start, end);
 
-            if(offsetStart != 0){
+            if (offsetStart != 0) {
                 String str = "\n";
                 int len = str.length();
                 mNoteEditor.append(str, 0, len);
@@ -377,17 +443,16 @@ public class NoteDetailActivity extends AppCompatActivity implements View.OnClic
             imageView.setImageBitmap(BitmapFactory.decodeFile(selectedImagePath));*/
 
 
-
             ArrayList<Uri> mArrayUri = new ArrayList<Uri>();
-            if(data.getData()!=null){
+            if (data.getData() != null) {
 
-                Uri mImageUri=data.getData();
-                Log.d(TAG, "Selected Images " +"1");
+                Uri mImageUri = data.getData();
+                Log.d(TAG, "Selected Images " + "1");
                 mArrayUri.add(mImageUri);
 
-            }else{
+            } else {
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
-                    if(data.getClipData()!=null){
+                    if (data.getClipData() != null) {
 
 
                         ClipData mClipData = null;
@@ -407,48 +472,45 @@ public class NoteDetailActivity extends AppCompatActivity implements View.OnClic
 
             }
 
-              Uri selectedImageUri = data.getData();
-            String[] projection = { MediaStore.MediaColumns.DATA };
+            Uri selectedImageUri = data.getData();
+            String[] projection = {MediaStore.MediaColumns.DATA};
             CursorLoader cursorLoader = null;
-            String textString ="";
+            String textString = "";
 
             ArrayList<String> mArrayImagePath = new ArrayList<String>();
-            for(int i = 0; i <  mArrayUri.size(); i++){
+            for (int i = 0; i < mArrayUri.size(); i++) {
 
-                cursorLoader = new CursorLoader(this,mArrayUri.get(i), projection, null, null, null);
-                Cursor cursor =cursorLoader.loadInBackground();
+                cursorLoader = new CursorLoader(this, mArrayUri.get(i), projection, null, null, null);
+                Cursor cursor = cursorLoader.loadInBackground();
                 int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
                 cursor.moveToFirst();
                 String selectedImagePath = cursor.getString(column_index);
                 mArrayImagePath.add(selectedImagePath);
-                textString += "\n\n"+selectedImagePath;
+                textString += "\n\n" + selectedImagePath;
                 cursor.close();
             }
             TextView imagetext = (TextView) findViewById(R.id.selectImagesText);
             imagetext.setText(textString);
 
 
-
-
             boolean once = true;
-            int startPos =0;
+            int startPos = 0;
             boolean prevNewLine = false;
             //Fixing allignment issues when adding a new image inside the edit text
-            int alignCase =0;
+            int alignCase = 0;
 
-            int start1 = Math.max( mNoteEditor.getSelectionStart(), 0);
-            int end1 = Math.max( mNoteEditor.getSelectionEnd(), 0);
+            int start1 = Math.max(mNoteEditor.getSelectionStart(), 0);
+            int end1 = Math.max(mNoteEditor.getSelectionEnd(), 0);
 
-            int offsetStart1 = Math.min(start1, end1) ;
-            int offsetEnd1 = Math.max(start1, end1) ;
-            if(offsetStart1 == offsetEnd1){
+            int offsetStart1 = Math.min(start1, end1);
+            int offsetEnd1 = Math.max(start1, end1);
+            if (offsetStart1 == offsetEnd1) {
                 alignCase = 1;
 
-            }
-            else{
+            } else {
                 alignCase = 2;
             }
-            for(int i = 0; i < mArrayImagePath.size(); i++){
+            for (int i = 0; i < mArrayImagePath.size(); i++) {
 
 
                 Bitmap b = ImgUtils.decodeSampledBitmapFromResource(mArrayImagePath.get(i), imgSpanWidth - borderPadding, imgSpanHeight - borderPadding);
@@ -459,22 +521,21 @@ public class NoteDetailActivity extends AppCompatActivity implements View.OnClic
                 final ImageSpan imgSpan = new ImageSpan(d);
 
 
-
                 SpannableStringBuilder ss = new SpannableStringBuilder(".\n");
                 ss.setSpan(imgSpan, 0, (".\n").length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 ss.setSpan(new NoteDetailsClickAbleSpan(mArrayImagePath.get(i)), 0, (".\n").length(), 0);
 
                 //mNoteEditor.append(ss, 0, (".\n").length());
 
-                int start = Math.max( mNoteEditor.getSelectionStart(), 0);
-                int end = Math.max( mNoteEditor.getSelectionEnd(), 0);
+                int start = Math.max(mNoteEditor.getSelectionStart(), 0);
+                int end = Math.max(mNoteEditor.getSelectionEnd(), 0);
                 Log.d(TAG, "Start " + start + "End " + end);
-                int offsetStart = Math.min(start, end) ;
-                int offsetEnd = Math.max(start, end) ;
+                int offsetStart = Math.min(start, end);
+                int offsetEnd = Math.max(start, end);
 
-                if(alignCase == 1){
-                    Log.d(TAG, "alignCASE 1" );
-                    if(offsetStart != 0 && !prevNewLine ){
+                if (alignCase == 1) {
+                    Log.d(TAG, "alignCASE 1");
+                    if (offsetStart != 0 && !prevNewLine) {
                         String str = "\n";
                         int len = str.length();
                         mNoteEditor.append(str, 0, len);
@@ -482,7 +543,7 @@ public class NoteDetailActivity extends AppCompatActivity implements View.OnClic
                         offsetStart = offsetStart + len;
                         offsetEnd = offsetEnd + len;
 
-                        if(once){
+                        if (once) {
                             startPos = offsetStart;
                             once = false;
                         }
@@ -491,22 +552,19 @@ public class NoteDetailActivity extends AppCompatActivity implements View.OnClic
 
 
                     mNoteEditor.getText().replace(offsetStart, offsetEnd, ss, 0, ss.length());
-                    if(offsetStart == 0) {
+                    if (offsetStart == 0) {
                         //mNoteEditor.getText().insert(offsetEnd, "\n");
                         mNoteEditor.getText().insert(offsetEnd, "\n");
                         Log.d(TAG, "insert  newline");
                         offsetStart = 1;
                         prevNewLine = true;
-                    }
-                    else{
+                    } else {
                         prevNewLine = false;
                     }
 
 
-
-                }
-                else if(alignCase ==2){
-                    Log.d(TAG, "alignCASE 2" );
+                } else if (alignCase == 2) {
+                    Log.d(TAG, "alignCASE 2");
 
 
                     mNoteEditor.getText().replace(offsetStart, offsetEnd, ss, 0, ss.length());
@@ -514,22 +572,13 @@ public class NoteDetailActivity extends AppCompatActivity implements View.OnClic
                 }
 
 
-
-
-
-
             }
-           // mNoteEditor.setMovementMethod(LinkMovementMethod.getInstance());
-            if(startPos!=0) {
+            // mNoteEditor.setMovementMethod(LinkMovementMethod.getInstance());
+            if (startPos != 0) {
                 mNoteEditor.getText().insert(startPos, "\n");
             }
 
-
-
         }
-
-
-
 
     }
 
@@ -540,22 +589,22 @@ public class NoteDetailActivity extends AppCompatActivity implements View.OnClic
         public NoteDetailsClickAbleSpan(String filePath) {
             this.filePath = filePath;
         }
+
         public NoteDetailsClickAbleSpan() {
 
         }
+
         @Override
         public void onClick(View widget) {
-            if(filePath != null) {
+            if (filePath != null) {
                 Toast.makeText(NoteDetailActivity.this, filePath, Toast.LENGTH_LONG).show();
-            }
-            else{
+            } else {
                 Toast.makeText(NoteDetailActivity.this, "Camera Image", Toast.LENGTH_LONG).show();
 
             }
 
         }
     }
-
 
 
 
